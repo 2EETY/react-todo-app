@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* html에 .dark 클래스가 붙으면 dark: 유틸리티가 동작 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-serif: "Gowun Batang", "Nanum Myeongjo", serif;
+
+  --color-fog: #e6eae6;
+  --color-paper: #f5f7f3;
+  --color-ink: #2f3b35;
+  --color-moss: #56645c;
+  --color-reed: #b59a5b;
+  --color-reed-deep: #8a7340;
+  --color-tide: #5e7f86;
+  --color-night: #1a2124;
+  --color-dusk: #232c2f;
+  --color-moon: #dce3de;
+
+  --animate-prompt-in: prompt-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-rise: rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes prompt-in {
+    from { opacity: 0; filter: blur(6px); transform: translateY(8px); }
+    to { opacity: 1; filter: blur(0); transform: none; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html { color-scheme: light; }
+  html.dark { color-scheme: dark; }
+  body {
+    @apply bg-fog font-sans text-ink antialiased dark:bg-night dark:text-moon;
+    word-break: keep-all;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-tide);
+    outline-offset: 2px;
+  }
+  dialog::backdrop {
+    background: rgb(26 33 36 / 0.45);
+    backdrop-filter: blur(3px);
+  }
+}
+
+/* 일기장 줄노트 배경 (대화 영역) */
+.ruled {
+  --rule: rgb(94 127 134 / 0.13);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 39px, var(--rule) 39px, var(--rule) 40px);
+}
+.dark .ruled { --rule: rgb(220 227 222 / 0.06); }
+
+/* ---- 배경 풍경 애니메이션 ---- */
+@keyframes sway { from { transform: rotate(-2deg); } to { transform: rotate(3.5deg); } }
+.reed { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 4.8s ease-in-out infinite alternate; }
+
+@keyframes rain-fall { from { transform: translate(0, 0); } to { transform: translate(-90px, 900px); } }
+.rain { animation: rain-fall 0.9s linear infinite; }
+
+@keyframes drift { from { transform: translateX(0); } to { transform: translateX(-200px); } }
+.wave { animation: drift 16s linear infinite; }
+
+@keyframes shimmer { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.85; } }
+.shimmer { animation: shimmer 3.6s ease-in-out infinite; }
+
+@keyframes ray { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.38; } }
+.ray { animation: ray 9s ease-in-out infinite; }
+
+@keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, -60px); } }
+.mote { animation: float 12s ease-in-out infinite alternate; }
+
+.scene-paused * { animation-play-state: paused !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
