@@ -3,20 +3,41 @@
 /* html에 .dark 클래스가 붙으면 dark: 유틸리티가 동작 */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * 테마마다 값이 달라지는 포인트 색은 CSS 변수로 둔다.
+ * 라이트: 물빛 + 갈대 / 다크(등잔불 아래 일기장): 세이지 + 등잔빛 갈대 금색
+ */
+:root {
+  --accent-tide: #5e7f86;
+  --accent-reed: #b59a5b;
+  --accent-reed-deep: #8a7340;
+}
+.dark {
+  --accent-tide: #93a383;
+  --accent-reed: #c9a867;
+  --accent-reed-deep: #d4b677;
+}
+
+@theme inline {
+  --color-tide: var(--accent-tide);
+  --color-reed: var(--accent-reed);
+  --color-reed-deep: var(--accent-reed-deep);
+}
+
 @theme {
   --font-sans: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif;
   --font-serif: "Gowun Batang", "Nanum Myeongjo", serif;
 
+  /* 라이트: 안개 낀 아침 */
   --color-fog: #e6eae6;
   --color-paper: #f5f7f3;
   --color-ink: #2f3b35;
   --color-moss: #56645c;
-  --color-reed: #b59a5b;
-  --color-reed-deep: #8a7340;
-  --color-tide: #5e7f86;
-  --color-night: #1a2124;
-  --color-dusk: #232c2f;
-  --color-moon: #dce3de;
+
+  /* 다크: 이탄 갈색 바탕, 오래된 가죽 표지, 한지빛 글자 */
+  --color-night: #1c1915;
+  --color-dusk: #26221c;
+  --color-moon: #e9e1d2;
 
   --animate-prompt-in: prompt-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-rise: rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -43,17 +64,27 @@
     outline-offset: 2px;
   }
   dialog::backdrop {
-    background: rgb(26 33 36 / 0.45);
+    background: rgb(47 59 53 / 0.4);
     backdrop-filter: blur(3px);
   }
-}
+  .dark dialog::backdrop {
+    background: rgb(14 12 9 / 0.62);
+  }
 
-/* 일기장 줄노트 배경 (대화 영역) */
-.ruled {
-  --rule: rgb(94 127 134 / 0.13);
-  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 39px, var(--rule) 39px, var(--rule) 40px);
+  /* 브라우저 기본 요소도 팔레트에 맞춘다 */
+  ::selection {
+    background: color-mix(in oklab, var(--color-reed) 38%, transparent);
+  }
+  input {
+    caret-color: var(--color-reed);
+  }
+  html {
+    scrollbar-color: color-mix(in oklab, var(--color-moss) 45%, transparent) transparent;
+  }
+  html.dark {
+    scrollbar-color: color-mix(in oklab, var(--color-moon) 22%, transparent) transparent;
+  }
 }
-.dark .ruled { --rule: rgb(220 227 222 / 0.06); }
 
 /* ---- 배경 풍경 애니메이션 ---- */
 @keyframes sway { from { transform: rotate(-2deg); } to { transform: rotate(3.5deg); } }

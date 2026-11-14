@@ -28,7 +28,7 @@ export const ChatPanel = ({ className }: ChatPanelProps) => {
       title="일기장과 대화"
       actions={<IconButton label="대화 비우기" size="sm" icon={<Eraser size={16} />} onClick={clear} />}
     >
-      <div ref={listRef} className="ruled min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+      <div ref={listRef} className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         <ol className="flex flex-col gap-3" aria-live="polite">
           {messages.map((m) => (
             <ChatBubble key={m.id} message={m} />
