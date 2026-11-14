@@ -37,6 +37,10 @@ export const formatMonthDay = (key: string): string => {
   return `${d.getMonth() + 1}월 ${d.getDate()}일 ${WEEKDAYS[d.getDay()]}요일`
 }
 
+/** "2026년 11월 15일 일요일" */
+export const formatFullDate = (d: Date): string =>
+  `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 ${WEEKDAYS[d.getDay()]}요일`
+
 /** "15:00" → "오후 3:00" */
 export const formatTime = (time: string): string => {
   const [h, m] = time.split(':').map(Number)

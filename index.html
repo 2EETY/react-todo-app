@@ -18,7 +18,16 @@
       try {
         var s = JSON.parse(localStorage.getItem('harugyeol:settings') || '{}').state || {}
         var t = s.theme || 'system'
-        if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // 밤 자동 어둡게 (src/lib/dayPhase.ts와 같은 규칙)
+        var now = new Date()
+        var q = new URLSearchParams(location.search).get('hour')
+        if (q !== null && /^\d+$/.test(q) && +q < 24) now.setHours(+q, 0, 0, 0)
+        var h = now.getHours()
+        var night = h >= 19 || h < 7
+        var key = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (h < 7 ? 1 : 0))
+        var nk = key.getFullYear() + '-' + String(key.getMonth() + 1).padStart(2, '0') + '-' + String(key.getDate()).padStart(2, '0')
+        var autoDark = s.nightAutoDark !== false && night && s.nightOverride !== nk
+        if (autoDark || t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark')
         }
       } catch (e) {}

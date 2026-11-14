@@ -4,7 +4,9 @@ import { BackgroundScene, ScenePicker } from './components/hero/BackgroundScene'
 import { RotatingPrompt } from './components/hero/RotatingPrompt'
 import { Header } from './components/layout/Header'
 import { SchedulePanel } from './components/schedule/SchedulePanel'
+import { NightAutoSwitch } from './components/ui/NightAutoSwitch'
 import { Toaster } from './components/ui/Toaster'
+import { useClock } from './hooks/useClock'
 import { useCrossTabSync } from './hooks/useCrossTabSync'
 import { useReminders } from './hooks/useReminders'
 import { useTheme } from './hooks/useTheme'
@@ -16,6 +18,7 @@ const MOBILE_TABS = [
 ] as const
 
 const App = () => {
+  useClock()
   useTheme()
   useReminders()
   useCrossTabSync()
@@ -55,7 +58,10 @@ const App = () => {
 
         <footer className="mt-4 flex flex-col items-start gap-2 text-xs text-moss sm:flex-row sm:items-center sm:justify-between dark:text-moon/55">
           <ScenePicker />
-          <p>모든 기록은 이 브라우저에만 저장돼요.</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <NightAutoSwitch />
+            <p>모든 기록은 이 브라우저에만 저장돼요.</p>
+          </div>
         </footer>
       </div>
       <Toaster />

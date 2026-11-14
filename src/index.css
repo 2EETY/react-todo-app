@@ -105,6 +105,9 @@
 @keyframes float { from { transform: translate(0, 0); } to { transform: translate(40px, -60px); } }
 .mote { animation: float 12s ease-in-out infinite alternate; }
 
+@keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.9; } }
+.twinkle { animation: twinkle 4.5s ease-in-out infinite; }
+
 .scene-paused * { animation-play-state: paused !important; }
 
 @media (prefers-reduced-motion: reduce) {
