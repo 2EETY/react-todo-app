@@ -14,6 +14,7 @@ export const useDiaryChat = () => {
   const addMessage = useChatStore((s) => s.addMessage)
   const addTask = useTaskStore((s) => s.addTask)
   const setSelectedDate = useUiStore((s) => s.setSelectedDate)
+  const markAdded = useUiStore((s) => s.markAdded)
 
   const send = (text: string) => {
     const trimmed = text.trim()
@@ -42,8 +43,9 @@ export const useDiaryChat = () => {
         weekday: parsed.weekday,
       })
       reply = replyForAdd(task, sameDay)
-      // 대화로 추가한 날짜로 일정 패널도 함께 이동 (상태 동기화)
+      // 대화로 추가한 날짜로 일정 패널도 함께 이동하고, 새 항목을 잠깐 강조 (상태 동기화)
       setSelectedDate(parsed.date)
+      markAdded(task.id)
     }
 
     window.setTimeout(() => {

@@ -13,7 +13,7 @@ const josa = (word: string, withFinal: string, withoutFinal: string): string => 
   if (code < 0 || code > 11171) return `${withFinal}(${withoutFinal})`
   return code % 28 === 0 ? withoutFinal : withFinal
 }
-const eulReul = (word: string): string => josa(word, '을', '를')
+export const eulReul = (word: string): string => josa(word, '을', '를')
 
 export const replyForAdd = (task: Task, sameDay: Task[]): string => {
   const routine = repeatLabel(task)

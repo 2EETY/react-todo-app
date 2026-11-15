@@ -19,6 +19,18 @@ export const Toaster = () => {
         >
           <BellRing aria-hidden size={16} className="shrink-0 text-reed" />
           <p className="flex-1">{t.text}</p>
+          {t.action && (
+            <button
+              type="button"
+              onClick={() => {
+                t.action?.onAction()
+                dismiss(t.id)
+              }}
+              className="shrink-0 rounded-full px-3 py-1 text-sm font-semibold text-reed underline-offset-2 hover:underline"
+            >
+              {t.action.label}
+            </button>
+          )}
           <IconButton
             label="알림 닫기"
             size="sm"

@@ -12,21 +12,28 @@ const WELCOME: ChatMessage = {
 interface ChatState {
   messages: ChatMessage[]
   addMessage: (role: ChatMessage['role'], text: string) => void
-  clear: () => void
+  /** 비우기 전 대화를 돌려준다 (되돌리기용) */
+  clear: () => ChatMessage[]
+  restore: (messages: ChatMessage[]) => void
 }
 
 export const CHAT_STORAGE_KEY = 'harugyeol:chat'
 
 export const useChatStore = create<ChatState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       messages: [WELCOME],
       addMessage: (role, text) =>
         set((s) => ({
           // 너무 길어지지 않게 최근 80개만 보관
           messages: [...s.messages, { id: crypto.randomUUID(), role, text, createdAt: Date.now() }].slice(-80),
         })),
-      clear: () => set({ messages: [WELCOME] }),
+      clear: () => {
+        const previous = get().messages
+        set({ messages: [WELCOME] })
+        return previous
+      },
+      restore: (messages) => set({ messages }),
     }),
     { name: CHAT_STORAGE_KEY, storage: createJSONStorage(() => localStorage) },
   ),

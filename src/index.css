@@ -41,6 +41,13 @@
 
   --animate-prompt-in: prompt-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-rise: rise 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-new-task: new-task 2.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* 방금 추가된 할 일: 갈대빛으로 잠깐 물들었다가 사라진다 */
+  @keyframes new-task {
+    0%, 30% { background-color: color-mix(in oklab, var(--color-reed) 26%, transparent); }
+    100% { background-color: transparent; }
+  }
 
   @keyframes prompt-in {
     from { opacity: 0; filter: blur(6px); transform: translateY(8px); }
