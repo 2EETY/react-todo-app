@@ -2,7 +2,8 @@ import type { Repeat } from '../types/task'
 import { addDays, startOfDay, toDateKey } from './date'
 
 export interface ParsedSchedule {
-  kind: 'add' | 'query'
+  /** add: 할 일 추가 / query: 일정 묻기 / diary: 일정이 아닌 하루 이야기 */
+  kind: 'add' | 'query' | 'diary'
   title: string
   date: string
   time: string | null
@@ -11,7 +12,12 @@ export interface ParsedSchedule {
 }
 
 const DAY_INDEX: Record<string, number> = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 }
-const RELATIVE: Record<string, number> = { 오늘: 0, 내일: 1, 낼: 1, 모레: 2, 글피: 3 }
+const RELATIVE: Record<string, number> = { 그저께: -2, 그제: -2, 어제: -1, 오늘: 0, 내일: 1, 낼: 1, 모레: 2, 글피: 3 }
+
+/** 지난 일을 말하는 끝맺음 ("피곤했어", "만났어요", "좋았다") */
+const PAST_RE = /(았|었|였|했|웠|됐|났|갔|왔|봤|줬|셨|혔)(어|어요|다|음|네|지|는데|더라|구나)?\s*[.!~ㅠㅜ]*\s*$/
+/** 기분을 나타내는 말 */
+const FEELING_RE = /(피곤|지치|지쳤|힘들|힘드|졸려|졸리|우울|슬프|슬펐|속상|외로|짜증|화나|화났|행복|기뻐|기뻤|좋았|신나|신났|뿌듯|설레|설렜|재밌|재미있|즐거|불안|걱정|기분)/
 
 /** 문장에 남아도 의미 없는 조사·군더더기 토큰 */
 const FILLER = new Set(['에', '에는', '엔', '은', '는', '부터', '까지', '쯤', '정도', '에도', '이날', '그날', '날', '나', '저', '음', '아', '좀', '꼭'])
@@ -81,7 +87,7 @@ export const parseKoreanSchedule = (input: string, now = new Date()): ParsedSche
   }
 
   // 3) 날짜
-  const rel = !date && take(/(오늘|내일|낼|모레|글피)/)
+  const rel = !date && take(/(그저께|그제|어제|오늘|내일|낼|모레|글피)/)
   if (rel) date = addDays(today, RELATIVE[rel[1]])
 
   const after = !date && take(/(\d+)\s*일\s*(뒤|후)(에)?/)
@@ -130,9 +136,17 @@ export const parseKoreanSchedule = (input: string, now = new Date()): ParsedSche
 
   const isQuery = QUERY_RE.test(input) && cleanTitle(rest.replace(QUERY_RE, ' ').replace(/[?？]/g, '')).length <= 2
 
+  // 지난 일이나 기분을 말했고, 앞으로의 날짜·시각·반복이 없으면 할 일이 아니라 일기로 본다.
+  // "내일 회의 잡혔어"처럼 미래 날짜가 있으면 과거형이어도 할 일이다.
+  const talksPastOrFeeling = PAST_RE.test(input.trim()) || FEELING_RE.test(input)
+  const notFuture = !date || date <= today
+  const isDiary = !isQuery && talksPastOrFeeling && notFuture && !time && repeat === 'none'
+
+  const kind: ParsedSchedule['kind'] = isQuery ? 'query' : isDiary ? 'diary' : 'add'
+
   return {
-    kind: isQuery ? 'query' : 'add',
-    title: isQuery ? '' : cleanTitle(rest.replace(/[?？]/g, '')),
+    kind,
+    title: kind === 'add' ? cleanTitle(rest.replace(/[?？]/g, '')) : '',
     date: toDateKey(date ?? today),
     time,
     repeat,

@@ -37,8 +37,20 @@ export const replyForQuery = (date: string, tasks: Task[]): string => {
   const lines = [...list]
     .sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99'))
     .map((t) => `· ${t.time ? `${formatTime(t.time)} ` : ''}${t.title}`)
-  return `${label}에는 ${list.length}개가 있어요.\n${lines.join('\n')}`
+  const topic = relativeWord(date) ? `${label}${josa(label, '은', '는')}` : `${label}에는`
+  return `${topic} ${list.length}개가 있어요.\n${lines.join('\n')}`
 }
+
+/** 일정이 아닌 하루 이야기에는 할 일을 만들지 않고 공감만 한다 */
+const DIARY_REPLIES: { match: RegExp; reply: string }[] = [
+  { match: /피곤|지치|지쳤|힘들|힘드|졸려|졸리/, reply: '오늘 많이 지쳤군요. 남은 일은 내일의 나에게 맡기고 푹 쉬어요.' },
+  { match: /우울|슬프|슬펐|속상|외로|짜증|화나|화났|불안|걱정/, reply: '마음이 무거운 하루였군요. 여기 적어 둔 것만으로도 조금 가벼워졌으면 해요.' },
+  { match: /행복|기뻐|기뻤|좋았|신나|신났|뿌듯|설레|설렜|재밌|재미있|즐거/, reply: '좋은 하루였네요. 그 기분, 오래 기억해 둘게요.' },
+]
+
+export const replyForDiary = (text: string): string =>
+  DIARY_REPLIES.find((d) => d.match.test(text))?.reply ??
+  '들려줘서 고마워요. 오늘 이야기는 여기 남겨 둘게요. 할 일이 생기면 날짜와 함께 말해 주세요.'
 
 export const replyForEmptyTitle = (): string =>
   '무엇을 할지 조금만 더 알려 주세요. 예를 들면 "토요일 오전 10시 등산"처럼요.'

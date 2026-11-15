@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { isTaskOnDate } from '../lib/date'
-import { replyForAdd, replyForEmptyTitle, replyForQuery } from '../lib/diaryReply'
+import { replyForAdd, replyForDiary, replyForEmptyTitle, replyForQuery } from '../lib/diaryReply'
 import { parseKoreanSchedule } from '../lib/parseKoreanSchedule'
 import { useChatStore } from '../store/useChatStore'
 import { useTaskStore } from '../store/useTaskStore'
@@ -28,6 +28,8 @@ export const useDiaryChat = () => {
     if (parsed.kind === 'query') {
       reply = replyForQuery(parsed.date, tasks)
       setSelectedDate(parsed.date)
+    } else if (parsed.kind === 'diary') {
+      reply = replyForDiary(trimmed)
     } else if (!parsed.title) {
       reply = replyForEmptyTitle()
     } else {
