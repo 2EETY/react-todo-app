@@ -51,7 +51,7 @@ export const ScenePicker = () => {
             'rounded-full px-2.5 py-1 text-xs transition-colors',
             i === index
               ? 'bg-ink/10 text-ink dark:bg-moon/15 dark:text-moon'
-              : 'text-moss/80 hover:text-ink dark:text-moon/50 dark:hover:text-moon',
+              : 'text-moss hover:text-ink dark:text-moon/70 dark:hover:text-moon',
           )}
         >
           {scene.name}

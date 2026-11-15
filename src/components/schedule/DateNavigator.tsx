@@ -20,7 +20,7 @@ export const DateNavigator = ({ total, doneCount }: DateNavigatorProps) => {
       <IconButton label="이전 날" size="sm" icon={<ChevronLeft size={18} />} onClick={() => shift(-1)} />
       <div className="min-w-0 flex-1 text-center">
         <p className="font-serif text-lg leading-tight font-bold">{rel ?? formatMonthDay(selected)}</p>
-        <p className="mt-0.5 text-xs text-moss dark:text-moon/60">
+        <p className="mt-0.5 text-xs text-moss dark:text-moon/75">
           {rel && <span>{formatMonthDay(selected)}, </span>}
           {total === 0 ? '비어 있음' : `${total}개 중 ${doneCount}개 끝냄`}
           {!isToday && (

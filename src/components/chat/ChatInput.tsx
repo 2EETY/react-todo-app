@@ -44,7 +44,7 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
           onChange={(e) => setText(e.target.value)}
           placeholder="오늘은 어땠나요? 할 일을 적어 보세요"
           autoComplete="off"
-          className="min-w-0 flex-1 bg-transparent text-[15px] placeholder:text-moss/60 focus:outline-none dark:placeholder:text-moon/40"
+          className="min-w-0 flex-1 bg-transparent text-[15px] placeholder:text-moss/90 focus:outline-none dark:placeholder:text-moon/60"
         />
         <button
           type="submit"

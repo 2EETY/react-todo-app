@@ -8,9 +8,9 @@
  * 라이트: 물빛 + 갈대 / 다크(등잔불 아래 일기장): 세이지 + 등잔빛 갈대 금색
  */
 :root {
-  --accent-tide: #5e7f86;
+  --accent-tide: #48676e;
   --accent-reed: #b59a5b;
-  --accent-reed-deep: #8a7340;
+  --accent-reed-deep: #6c5829;
 }
 .dark {
   --accent-tide: #93a383;

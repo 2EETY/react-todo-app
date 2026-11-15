@@ -13,7 +13,7 @@ import { SortableTaskList } from './SortableTaskList'
 type Tab = 'day' | 'routine'
 
 const EmptyNote = ({ children }: { children: string }) => (
-  <p className="px-6 py-10 text-center font-serif text-[15px] leading-relaxed text-moss/80 dark:text-moon/50">{children}</p>
+  <p className="px-6 py-10 text-center font-serif text-[15px] leading-relaxed text-moss dark:text-moon/70">{children}</p>
 )
 
 interface SchedulePanelProps {
