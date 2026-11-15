@@ -3,6 +3,7 @@ import { ChatPanel } from './components/chat/ChatPanel'
 import { BackgroundScene, ScenePicker } from './components/hero/BackgroundScene'
 import { RotatingPrompt } from './components/hero/RotatingPrompt'
 import { Header } from './components/layout/Header'
+import { MobileTabs } from './components/layout/MobileTabs'
 import { SchedulePanel } from './components/schedule/SchedulePanel'
 import { NightAutoSwitch } from './components/ui/NightAutoSwitch'
 import { Toaster } from './components/ui/Toaster'
@@ -12,51 +13,33 @@ import { useReminders } from './hooks/useReminders'
 import { useTheme } from './hooks/useTheme'
 import { useUiStore } from './store/useUiStore'
 
-const MOBILE_TABS = [
-  { id: 'chat', label: '대화' },
-  { id: 'schedule', label: '할 일' },
-] as const
-
 const App = () => {
   useClock()
   useTheme()
   useReminders()
   useCrossTabSync()
   const mobileView = useUiStore((s) => s.mobileView)
-  const setMobileView = useUiStore((s) => s.setMobileView)
 
   return (
     <>
       <BackgroundScene />
-      <div className="relative z-10 mx-auto flex min-h-dvh max-w-6xl flex-col px-4 pt-4 pb-4 sm:px-6 sm:pt-6 lg:px-8">
-        <Header />
-        <RotatingPrompt />
+      <div className="relative z-10 mx-auto flex min-h-dvh max-w-6xl flex-col px-4 sm:px-6 lg:px-8">
+        {/*
+          모바일: 머리말~입력창까지를 화면 높이(dvh) 하나에 담아 입력창이 잘리지 않게 한다.
+          푸터는 그 아래로 스크롤해서 본다. lg 이상은 패널 높이를 고정해 푸터까지 한 화면에 보인다.
+        */}
+        <div className="flex h-dvh min-h-140 flex-col pt-3 pb-3 sm:pt-6 lg:h-auto lg:min-h-0 lg:pb-0">
+          <Header />
+          <RotatingPrompt />
+          <MobileTabs />
 
-        {/* 모바일에서는 탭으로 한 패널씩, lg 이상에서는 두 패널을 나란히 */}
-        <div role="tablist" aria-label="화면 전환" className="mb-3 flex gap-1 self-start rounded-full bg-paper/70 p-1 backdrop-blur lg:hidden dark:bg-dusk/70">
-          {MOBILE_TABS.map((t) => (
-            <button
-              key={t.id}
-              role="tab"
-              type="button"
-              aria-selected={mobileView === t.id}
-              onClick={() => setMobileView(t.id)}
-              className={clsx(
-                'rounded-full px-4 py-1.5 text-sm transition-colors',
-                mobileView === t.id ? 'bg-ink text-paper dark:bg-moon dark:text-night' : 'text-moss dark:text-moon/70',
-              )}
-            >
-              {t.label}
-            </button>
-          ))}
+          <main className="grid min-h-0 flex-1 gap-4 lg:h-[min(640px,calc(100dvh-21.5rem))] lg:flex-none lg:grid-cols-[1.25fr_1fr] lg:gap-5">
+            <ChatPanel className={clsx(mobileView !== 'chat' && 'hidden lg:flex')} />
+            <SchedulePanel className={clsx(mobileView !== 'schedule' && 'hidden lg:flex')} />
+          </main>
         </div>
 
-        <main className="grid h-[calc(100dvh-15rem)] min-h-[440px] gap-4 sm:h-[calc(100dvh-17rem)] lg:h-[min(640px,calc(100dvh-21.5rem))] lg:grid-cols-[1.25fr_1fr] lg:gap-5">
-          <ChatPanel className={clsx(mobileView !== 'chat' && 'hidden lg:flex')} />
-          <SchedulePanel className={clsx(mobileView !== 'schedule' && 'hidden lg:flex')} />
-        </main>
-
-        <footer className="mt-4 flex flex-col items-start gap-2 text-xs text-moss sm:flex-row sm:items-center sm:justify-between dark:text-moon/55">
+        <footer className="mt-1 mb-4 flex flex-col items-start gap-2 text-xs text-moss sm:flex-row sm:items-center sm:justify-between lg:mt-4 dark:text-moon/65">
           <ScenePicker />
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <NightAutoSwitch />

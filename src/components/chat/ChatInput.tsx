@@ -20,7 +20,7 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div className="border-t border-ink/8 px-3 pt-3 pb-3 sm:px-4 dark:border-moon/8">
-      <ul className="-mx-1 mb-2.5 flex gap-1.5 overflow-x-auto px-1 pb-1" aria-label="이렇게 말해 보세요">
+      <ul className="-mx-1 mb-2.5 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="이렇게 말해 보세요">
         {SUGGESTIONS.map((s) => (
           <li key={s} className="shrink-0">
             <button
